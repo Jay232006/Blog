@@ -26,7 +26,7 @@ def like_blog(request, pk):
     })
 def home(request):
     posts = BlogPost.objects.filter(visibility='public').order_by('-created_at')
-    return render(request, 'Home.html', {'posts': posts})
+    return render(request, 'home.html', {'posts': posts})
 
 def blog_detail(request, pk):
     blog = get_object_or_404(BlogPost, pk=pk)
