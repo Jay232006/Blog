@@ -1,0 +1,137 @@
+<!-- profile.html -->
+<div id="profileOverlay" onclick="closeProfile()" style="display: none;"></div>
+
+<div id="profilePrompt" class="profile-prompt" style="display: none;">
+  <div class="profile-content">
+    <button class="close-btn" onclick="closeProfile()" aria-label="Close">×</button>
+
+    <h2>👤 Profile</h2>
+    <p><strong>Username:</strong> {{ request.user.username }}</p>
+    <p><strong>Email:</strong> {{ request.user.email }}</p>
+
+    <div class="profile-links">
+      <a href="{% url 'my_blogs' %}">📄 My Blogs</a>
+      {% comment %} <a href="{% url 'liked_blogs' %}">❤️ Liked Blogs</a> {% endcomment %}
+      {% comment %} <a href="#">➕ Add By Yourself</a> {% endcomment %}
+      <a href="{% url 'logout' %}" class="logout">🚪 Logout</a>
+    </div>
+  </div>
+</div>
+
+<style>
+  .profile-prompt {
+    position: fixed;
+    top: 40px;
+    bottom: 40px;
+    right: 0;
+    width: 360px;
+    background-color: #fff;
+    border-top-left-radius: 30px;
+    border-bottom-left-radius: 30px;
+    box-shadow: -4px 0 15px rgba(0,0,0,0.15);
+    z-index: 9999;
+    padding: 30px 25px;
+    overflow-y: auto;
+    transform: translateX(100%);
+    opacity: 0;
+    transition: transform 0.3s ease-out, opacity 0.3s ease;
+  }
+
+  .profile-prompt.show {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  .profile-content {
+    font-family: Arial, sans-serif;
+  }
+
+  .profile-content h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    margin-bottom: 20px;
+  }
+
+  .profile-content p {
+    font-size: 16px;
+    margin-bottom: 10px;
+    color: #333;
+  }
+
+  .profile-links {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .profile-links a {
+    font-size: 16px;
+    padding: 12px 16px;
+    text-decoration: none;
+    background: #f0f0f0;
+    border-radius: 10px;
+    color: #111;
+    transition: all 0.2s;
+  }
+
+  .profile-links a:hover {
+    background-color: #e0e0ff;
+    transform: translateX(-4px);
+  }
+
+  .profile-links a.logout {
+    background-color: #ffe5e5;
+    color: #b20000;
+  }
+
+  .profile-links a.logout:hover {
+    background-color: #ffcccc;
+  }
+
+  #profileOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: calc(100% - 360px);
+    height: 100%;
+    background: rgba(0,0,0,0.2);
+    z-index: 9998;
+  }
+
+  .close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 24px;
+    background: none;
+    border: none;
+    color: #666;
+    cursor: pointer;
+  }
+
+  .close-btn:hover {
+    color: #000;
+  }
+</style>
+
+<script>
+  function openProfile() {
+    document.getElementById('profilePrompt').style.display = 'block';
+    document.getElementById('profileOverlay').style.display = 'block';
+
+    setTimeout(() => {
+      document.getElementById('profilePrompt').classList.add('show');
+    }, 10);
+  }
+
+  function closeProfile() {
+    const prompt = document.getElementById('profilePrompt');
+    prompt.classList.remove('show');
+
+    setTimeout(() => {
+      prompt.style.display = 'none';
+      document.getElementById('profileOverlay').style.display = 'none';
+    }, 300);
+  }
+</script>

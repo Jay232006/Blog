@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Liked Blogs - BlogGo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #111;
+        }
+
+        h1 {
+            font-size: 32px;
+            margin: 30px 60px 20px;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .blogs-wrapper {
+            padding: 0 60px 40px;
+        }
+
+        .blog-card {
+            background: #fff;
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+
+        .blog-card a {
+            text-decoration: none;
+            color: #007bff;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .blog-card a:hover {
+            text-decoration: underline;
+        }
+
+        .back-link {
+            display: block;
+            margin: 20px 60px;
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    {% include 'navbar.html' %}
+
+    <h1>❤️ Blogs You've Liked</h1>
+
+    <div class="blogs-wrapper">
+        {% if liked_blogs %}
+            {% for blog in liked_blogs %}
+                <div class="blog-card">
+                    <a href="{% url 'blog_detail' blog.pk %}">{{ blog.title }}</a>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p style="margin-left: 60px;">You haven't liked any blogs yet.</p>
+        {% endif %}
+
+        <a class="back-link" href="{% url 'home' %}">← Back to Home</a>
+    </div>
+
+    {% include 'profile.html' %}
+
+</body>
+</html>

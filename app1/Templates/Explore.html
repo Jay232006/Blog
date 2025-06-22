@@ -1,0 +1,200 @@
+     <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Explore Blogs - BlogGo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      color: #111;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #000;
+      padding: 20px 40px;
+      color: #fff;
+      height: 80px;
+    }
+
+    .navbar .left, .navbar .right {
+      display: flex;
+      align-items: center;
+    }
+
+    .navbar a {
+      color: #fff;
+      text-decoration: none;
+      margin: 0 18px;
+      font-size: 18px;
+      transition: color 0.3s ease;
+    }
+
+    .navbar a:hover {
+      color: #ccc;
+    }
+
+    .navbar .brand {
+      font-size: 32px;
+      font-weight: bold;
+      font-family: 'Playfair Display', serif;
+    }
+
+    .login-btn {
+      background-color: #1a1a1a;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 16px;
+      border: 1px solid #444;
+    }
+
+    h1 {
+      font-size: 32px;
+      margin: 30px 60px 10px;
+      font-family: 'Playfair Display', serif;
+    }
+
+    .filter-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 60px 20px;
+      gap: 10px;
+    }
+
+    .filter-bar form {
+      display: flex;
+      width: 100%;
+      gap: 12px;
+    }
+
+    .filter-bar input[type="text"] {
+      flex: 1;
+      padding: 10px;
+      font-size: 14px;
+      border: 1.5px solid #ccc;
+      border-radius: 10px;
+      outline: none;
+    }
+
+    .filter-bar select {
+      padding: 10px;
+      font-size: 14px;
+      border-radius: 10px;
+      border: 1.5px solid #ccc;
+      outline: none;
+    }
+
+    .filter-bar button {
+      padding: 10px 16px;
+      font-size: 14px;
+      border-radius: 10px;
+      background-color: #000;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+
+    .filter-bar button:hover {
+      opacity: 0.7;
+    }
+
+    .blogs-wrapper {
+      padding: 0 60px 40px;
+    }
+
+    .blog-card {
+      background: #fff;
+      border: 1px solid #ddd;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      transition: transform 0.2s;
+    }
+
+    .blog-card:hover {
+      transform: scale(1.01);
+    }
+
+    .blog-card a {
+      text-decoration: none;
+      color: #007bff;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .blog-card p {
+      color: #555;
+      font-size: 14px;
+      margin-top: 6px;
+    }
+
+    .like-info {
+      margin-top: 8px;
+      font-size: 14px;
+      color: #b10000;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <div class="navbar">
+    <div class="left">
+      <a class="brand" href="/">BlogGo</a>
+    </div>
+    <div class="right">
+      <a href="{% url 'trending_blogs' %}">Trending</a>
+      <a href="{% url 'explore' %}">Explore</a>
+      <a href="{% url 'create_blog' %}">Create</a>
+      {% if request.user.is_authenticated %}
+        <a href="#" class="login-btn" onclick="openProfile()">Profile</a>
+      {% else %}
+        <a href="{% url 'login' %}" class="login-btn">Login</a>
+      {% endif %}
+    </div>
+  </div>
+
+  <h1>🔍 Explore Blogs</h1>
+
+  <!-- Filter Section -->
+  <div class="filter-bar">
+    <form method="GET">
+      <input type="text" name="search" placeholder="Search by title, content or author..." value="{{ request.GET.search }}">
+      <select name="sort">
+        <option value="">Sort By</option>
+        <option value="newest" {% if request.GET.sort == 'newest' %}selected{% endif %}>Newest</option>
+        <option value="oldest" {% if request.GET.sort == 'oldest' %}selected{% endif %}>Oldest</option>
+        <option value="likes" {% if request.GET.sort == 'likes' %}selected{% endif %}>Most Liked</option>
+      </select>
+      <button type="submit">Apply</button>
+    </form>
+  </div>
+
+  <!-- Blog List -->
+  <div class="blogs-wrapper">
+    {% if blogs %}
+      {% for blog in blogs %}
+        <div class="blog-card">
+          <a href="{% url 'blog_detail' blog.pk %}">{{ blog.title }}</a>
+          <p>By {{ blog.author.username }} on {{ blog.created_at|date:"F j, Y" }}</p>
+          <p>{{ blog.content|truncatewords:20 }}</p>
+          <div class="like-info">❤️ {{ blog.liked_by.count }} Likes</div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p>No blogs match your search.</p>
+    {% endif %}
+  </div>
+
+  {% include 'profile.html' %}
+
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!-- templates/navbar.html -->
+<div class="navbar">
+    <div class="left">
+        <a class="brand" href="/">BlogGo</a>
+    </div>
+    <div class="right">
+        <a href="/trending">Trending</a>
+        <a href="/Explore">Explore</a>
+        <a href="/create">Create</a>
+
+        {% if request.user.is_authenticated %}
+            <a href="/#" class="login-btn" onclick="openProfile()">Profile</a>
+        {% else %}
+            <a href="/login" class="login-btn">Login</a>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #000;
+        padding: 20px 40px;
+        color: #fff;
+        height: 80px;
+    }
+
+    .navbar .left, .navbar .right {
+        display: flex;
+        align-items: center;
+    }
+
+    .navbar a {
+        color: #fff;
+        text-decoration: none;
+        margin: 0 18px;
+        font-size: 18px;
+        transition: color 0.3s ease;
+    }
+
+    .navbar a:hover {
+        color: #ccc;
+    }
+
+    .navbar .brand {
+        font-size: 32px;
+        font-weight: bold;
+        font-family: 'Playfair Display', serif;
+    }
+
+    .login-btn {
+        background-color: #1a1a1a;
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-size: 16px;
+        border: 1px solid #444;
+    }
+</style>

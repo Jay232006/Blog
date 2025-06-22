@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>BlogGo - Login / Signup</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #fff;
+      color: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .auth-container {
+      width: 400px;
+      border: 2px solid #000;
+      padding: 30px;
+      border-radius: 10px;
+      background-color: #fff;
+    }
+
+    h2 {
+      text-align: center;
+      font-size: 32px;
+      margin-bottom: 20px;
+      font-family: 'Playfair Display', serif;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 2px solid #000;
+      background-color: #fff;
+      color: #000;
+      font-size: 14px;
+      transition: all 0.3s ease;
+      border-radius: 6px;
+    }
+
+    input:focus {
+      outline: none;
+      background-color: #f0f0f0;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 10px;
+      margin-top: 15px;
+      background-color: #000;
+      color: #fff;
+      border: 2px solid #000;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      border-radius: 6px;
+    }
+
+    .btn:hover {
+      opacity: 0.6;
+    }
+
+    .switch-link {
+      text-align: center;
+      margin-top: 12px;
+      font-size: 13px;
+    }
+
+    .switch-link a {
+      color: #000;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SIGN UP FORM -->
+  <div class="auth-container" id="signup-form">
+    <h2>Sign Up</h2>
+    <input type="text" id="signup-username" placeholder="Username" required>
+    <input type="email" id="signup-email" placeholder="Email" required>
+    <input type="password" id="signup-password" placeholder="Password" required minlength="6">
+    <input type="password" id="signup-confirm" placeholder="Confirm Password" required minlength="6">
+    <button class="btn" onclick="handleSignup()">Sign Up</button>
+    <div class="switch-link">Already have an account? <a onclick="toggleForms()">Log In</a></div>
+  </div>
+
+  <!-- LOGIN FORM -->
+  <div class="auth-container" id="login-form" style="display:none;">
+    <h2>Log In</h2>
+    <input type="text" id="login-username" placeholder="Username or Email" required>
+    <input type="password" id="login-password" placeholder="Password" required minlength="6">
+    <button class="btn" onclick="handleLogin()">Log In</button>
+    <div class="switch-link">Don't have an account? <a onclick="toggleForms()">Sign Up</a></div>
+  </div>
+
+  <script>
+    function toggleForms() {
+      const signUp = document.getElementById('signup-form');
+      const login = document.getElementById('login-form');
+      if (signUp.style.display === 'none') {
+        signUp.style.display = 'block';
+        login.style.display = 'none';
+      } else {
+        signUp.style.display = 'none';
+        login.style.display = 'block';
+      }
+    }
+
+    function getCSRFToken() {
+      const name = 'csrftoken=';
+      const decodedCookies = decodeURIComponent(document.cookie).split(';');
+      for (let i = 0; i < decodedCookies.length; i++) {
+        let c = decodedCookies[i].trim();
+        if (c.startsWith(name)) {
+          return c.substring(name.length, c.length);
+        }
+      }
+      return '';
+    }
+
+    function handleSignup() {
+      const username = document.getElementById('signup-username').value.trim();
+      const email = document.getElementById('signup-email').value.trim();
+      const password = document.getElementById('signup-password').value;
+      const confirmPassword = document.getElementById('signup-confirm').value;
+
+      if (!username || !email || !password || !confirmPassword) {
+        alert("Please fill in all fields.");
+        return;
+      }
+
+      if (!email.includes("@") || !email.includes(".")) {
+        alert("Please enter a valid email address.");
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        alert("Passwords do not match.");
+        return;
+      }
+
+      if (password.length < 6) {
+        alert("Password must be at least 6 characters.");
+        return;
+      }
+
+      fetch('/signup/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'X-CSRFToken': getCSRFToken()
+        },
+        body: `username=${encodeURIComponent(username)}&email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}&confirm_password=${encodeURIComponent(confirmPassword)}`
+      })
+      .then(res => res.json())
+      .then(data => {
+        alert(data.message);
+        if (data.status === 'success') {
+          setTimeout(() => {
+            toggleForms();  // ✅ Switch to login form instead of redirect
+          }, 1000);
+        }
+      });
+    }
+
+    function handleLogin() {
+      const identifier = document.getElementById('login-username').value.trim();
+      const password = document.getElementById('login-password').value;
+
+      if (!identifier || !password) {
+        alert("Please enter both username/email and password.");
+        return;
+      }
+
+      if (password.length < 6) {
+        alert("Password must be at least 6 characters.");
+        return;
+      }
+
+      fetch('/login/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'X-CSRFToken': getCSRFToken()
+        },
+        body: `username_or_email=${encodeURIComponent(identifier)}&password=${encodeURIComponent(password)}`
+      })
+      .then(res => res.json())
+      .then(data => {
+        alert(data.message);
+        if (data.status === 'success') {
+          setTimeout(() => window.location.href = "/", 1500);
+        }
+      });
+    }
+  </script>
+</body>
+</html>
