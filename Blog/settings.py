@@ -8,14 +8,17 @@ SECRET_KEY = 'django-insecure-%ozt)(r-8x8a@9k^%fq0+a)hst@sm*p11mc^m994d$r77t#n21
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    "127.0.0.1", "localhost",
+    "127.0.0.1",
+    "localhost",
     "bloggo-fitc.onrender.com",
-    "blog-app-1.onrender.com",
-    "blog-app-1.vercel.app",
-    ".render.com",
     ".vercel.app",
+    ".onrender.com",
     ".railway.app",
+    ".render.com",
+    "blog-app-1.onrender.com",
+    "blog-app-1.vercel.app"
 ]
+
 
 # Application definition
 INSTALLED_APPS = [
