@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-%ozt)(r-8x8a@9k^%fq0+a)hst@sm*p11mc^m994d$r77t#n21'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ["127.0.0.1", "localhost",'.vercel.app']
+ALLOWED_HOSTS = ["127.0.0.1", "localhost",'127.0.0.1', 'localhost', 'bloggo-fitc.onrender.com''.vercel.app','.onrender.com', "bloggo-fitc.onrender.com",'.railway.app', '.render.com', '.railway.app', '.vercel.app', 'blog-app-1.onrender.com', 'blog-app-1.vercel.app']
 
 
 # Application definition
@@ -139,3 +139,10 @@ import os
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_ROOT = BASE_DIR / 'media'
+
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# Whitenoise for static file serving
+MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
+
