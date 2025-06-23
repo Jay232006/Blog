@@ -24,7 +24,4 @@
 | Auth       | Django auth system |
 
 
----
-
-## 📂 Project Structure
 
